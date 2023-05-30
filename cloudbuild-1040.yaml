@@ -1,0 +1,11 @@
+steps:
+- name: 'docker.io/library/python:3.7'
+  entrypoint: /bin/sh
+  # Run pip install and pytest in the same build step
+  # (pip packages won't be preserved in future steps!)
+  args: [-c, 'pip install -r requirements.txt']
+  dir: '1040/'
+- name: 'gcr.io/cloud-builders/gcloud'
+  args: ['functions', 'deploy', 'parser-1040', '--trigger-bucket','1040_raw', '--runtime', 'python37', '--entry-point', 'main','--set-env-vars', 'DB_USER=halcyon-use', '--set-env-vars','DB_NAME=halcyondatabase', '--set-env-vars','DB_HOST=10.43.48.7:5432
+', '--set-env-vars','DB_DRIVER=postgresql+pg8000', '--set-env-vars','gcs_output_bucket=1040_processed', '--set-env-vars','location=us',  '--set-env-vars','project_id=910286522764', '--set-env-vars','processor_id=2e7febc7816e64e4']
+  dir: '1040/'
